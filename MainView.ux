@@ -1,4 +1,32 @@
 <App Theme="Basic">
+	<!-- ============= 	-->
+	<!-- JAVASCRIPT		-->
+	<!-- ============= 	-->
+	<JavaScript>
+
+		var Observable = require("FuseJS/Observable");
+
+		var pictures = Observable();
+
+		fetch("http://jsonplaceholder.typicode.com/photos")
+		.then(function(res) {
+			res.json().then(function(data){
+				debug_log("Success");
+
+				for(var i = 0; i < 10; i++){
+					var item = data[i];
+					pictures.add(item);
+				}
+			})
+		});
+
+        module.exports = {
+        	pictures: pictures
+        };
+
+		debugger;
+	</JavaScript>
+
 	<!-- ================== -->
 	<!-- GLOBAL ELEMENTS	-->
 	<!-- ================== -->
@@ -9,8 +37,7 @@
 		<!-- ============= 	-->
 		<!-- CLASSES 		-->
 		<!-- ============= 	-->
-
-		<StackPanel ux:Class="HamburgerIcon" Width="25" Height="25" Alignment="Left" Margin="10,0,0,0">
+		<StackPanel ux:Class="HamburgerIcon" ux:Name="Navbar" Width="25" Height="25" Alignment="Left" Margin="10,0,0,0">
 			<Rectangle ux:Class="HamburgerBar" Margin="0,3,0,3" Height="3" Color="#FFF" />
 			<HamburgerBar/>
 			<HamburgerBar/>
@@ -39,19 +66,26 @@
 				<Panel Alignment="CenterLeft">
 					<HamburgerIcon />
 				</Panel>
-				<Panel Alignment="CenterRight">
-					<Image File="Assets/images/zoom-search-2-icon.png" Width="30" Alignment="CenterRight" Density="1" Margin="0,0,5,0"/>
-				</Panel>
 			</Grid>
 		</DockPanel>
 
 		<PageControl>
-			<PageWithHeader HeaderColor="#732027" Title="dashboard ::" HeaderTextColor="#FFF"></PageWithHeader>
+			<PageWithHeader HeaderColor="#732027" Title="dashboard ::" HeaderTextColor="#FFF">
+				<ScrollView ClipToBounds="true">
+					<StackPanel>
+						<Each Items="{pictures}">
+							<DockPanel>
+								<Image Url="{thumbnailUrl}" Dock="Left" Margin="0,0,0,10" />
+								<Text Value="{title}" TextWrapping="Wrap" Alignment="CenterLeft" Margin="10" />
+							</DockPanel>
+						</Each>	
+					</StackPanel>
+				</ScrollView>
+			</PageWithHeader>
 			<PageWithHeader HeaderColor="#2E4861" Title="section 1 ::" HeaderTextColor="#FFF"></PageWithHeader>
 			<PageWithHeader HeaderColor="#C04258" Title="section 2 ::" HeaderTextColor="#FFF"></PageWithHeader>
 			<PageWithHeader HeaderColor="#3F5938" Title="section 3 ::" HeaderTextColor="#FFF"></PageWithHeader>
 		</PageControl>
-
 	</DockPanel>
 </App>
 
